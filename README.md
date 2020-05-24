@@ -1,4 +1,4 @@
-**Expense Manager
+**Expense Manager**
 
 Make your expense managing smart and let the savings flow in.
 
