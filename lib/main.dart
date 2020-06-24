@@ -4,6 +4,7 @@ import 'package:personal_expenses/widgets/summary.dart';
 import 'package:personal_expenses/widgets/transactionInput.dart';
 import './widgets/transactionList.dart';
 import './models/transactions.dart';
+import './widgets/stats.dart';
 
 void main() => runApp(Expense());
 
@@ -16,6 +17,9 @@ class Expense extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: HomePage(),
+      routes: {
+        Statistics.routeName: (ctx) => Statistics(),
+      },
     );
   }
 }
@@ -30,10 +34,7 @@ class _HomePageState extends State<HomePage> {
     Transactions(
         txId: '001', txName: 'Shoes', txAmt: 20.0, txDate: DateTime.now()),
     Transactions(
-        txId: '002',
-        txName: 'Phone cover',
-        txAmt: 10.0,
-        txDate: DateTime.now())
+        txId: '002', txName: 'Phone cover', txAmt: 10.0, txDate: DateTime.now())
   ];
 
   List<Transactions> get _recentTransactions {
@@ -74,30 +75,36 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Expense Manager'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () => _startAddTx(context),
-            ),
+      appBar: AppBar(
+        title: Text('Expense Manager'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _startAddTx(context),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Chart(_recentTransactions),
+            Summary(_txs),
+            TransactionsList(_txs),
+            RaisedButton(
+              child: Text('Press'),
+              onPressed: () {
+                Navigator.of(context).pushNamed(Statistics.routeName);
+              },
+            )
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Chart(_recentTransactions),
-              Summary(_txs),
-              TransactionsList(_txs),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => _startAddTx(context),
-        ),
-      );
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _startAddTx(context),
+      ),
+    );
   }
 }
